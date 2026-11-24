@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROJECT G — Executive Command Center Dashboard (English Edition | Rev 6.0)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            noc: {
+              950: '#030712',
+              900: '#081024',
+              850: '#0d1834',
+              800: '#132246'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* Cyber-Executive Sovereign Command Center Theme */
+    body {
+      background:
+        radial-gradient(circle at 12% 0%, rgba(26, 115, 232, 0.18) 0%, transparent 42%),
+        radial-gradient(circle at 88% 8%, rgba(16, 185, 129, 0.12) 0%, transparent 38%),
+        linear-gradient(180deg, #040814 0%, #060c1d 50%, #030611 100%);
+      color: #f1f5f9;
+    }
+    .glass-card {
+      background: rgba(11, 20, 42, 0.84);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(56, 189, 248, 0.16);
+      box-shadow: 0 14px 34px -12px rgba(0, 0, 0, 0.7);
+    }
+    .glass-subcard {
+      background: rgba(7, 13, 29, 0.76);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+    }
+    .dropzone-active {
+      border-color: #38bdf8 !important;
+      background: rgba(14, 116, 144, 0.28) !important;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #050a17;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e3a5f;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #38bdf8;
+    }
+  </style>
+</head>
+<body class="min-h-screen font-sans antialiased selection:bg-sky-500/30 selection:text-sky-200">
+
+  <!-- Non-Blocking Toast Notification Container (No alert() / confirm()) -->
+  <div id="toastStack" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-md pointer-events-none"></div>
+
+  <!-- Top Sovereign Executive Masthead -->
+  <header class="sticky top-0 z-40 border-b border-sky-500/20 bg-noc-950/90 backdrop-blur-xl">
+    <div class="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5 space-y-3">
+      <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+        <!-- Co-Branding Badges: Google Cloud, Google Maps Platform & 44CHPIPS -->
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- Google Cloud Official Badge -->
+          <div class="flex items-center bg-white rounded-xl px-3 py-1.5 border border-slate-300 shadow-sm">
+            <svg viewBox="0 0 235 46" class="h-6 w-auto" role="img" aria-label="Google Cloud">
+              <title>Google Cloud</title>
+              <path d="M25.5 13.5c4.2 0 7.9 2.2 9.9 5.6l4.8-4.8C36.9 9.5 31.5 6.5 25.5 6.5c-7.8 0-14.5 4.9-17.1 11.9l5.9 4.6c1.5-5.5 6.5-9.5 11.2-9.5z" fill="#EA4335"/>
+              <path d="M42.8 23.2c0-1.5-.2-2.9-.6-4.2h-5.8c1.2 1.8 1.9 4 1.9 6.3 0 4.4-2.6 8.2-6.4 9.9l4.6 5.5c5.2-3.4 8.6-9.3 8.6-16 0-.5-.1-1-.3-1.5z" fill="#4285F4"/>
+              <path d="M14.3 29.8c-.6-1.4-.9-2.9-.9-4.5 0-1.1.2-2.2.5-3.2l-5.9-4.6C6.7 20 6 22.8 6 25.8c0 4.6 1.8 8.8 4.8 11.9l5.3-5.3c-.7-.8-1.3-1.7-1.8-2.6z" fill="#FBBC05"/>
+              <path d="M25.5 36.2c-4.2 0-7.9-2.3-9.8-5.7l-5.3 5.3c3.4 4.5 8.8 7.4 15.1 7.4 5.5 0 10.4-2.3 13.9-6l-4.6-5.5c-2.5 2.8-5.7 4.5-9.3 4.5z" fill="#34A853"/>
+              <text x="52" y="31" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="700">
+                <tspan fill="#4285F4">G</tspan><tspan fill="#EA4335">o</tspan><tspan fill="#FBBC05">o</tspan><tspan fill="#4285F4">g</tspan><tspan fill="#34A853">l</tspan><tspan fill="#EA4335">e</tspan><tspan fill="#3c4043" font-weight="600"> Cloud</tspan>
+              </text>
+            </svg>
+          </div>
+
+          <!-- Google Maps Platform Official Badge -->
+          <div class="flex items-center bg-white rounded-xl px-3 py-1.5 border border-slate-300 shadow-sm">
+            <svg viewBox="0 0 288 46" class="h-6 w-auto" role="img" aria-label="Google Maps Platform">
+              <title>Google Maps Platform</title>
+              <path d="M21 6c-7.2 0-13 5.8-13 13 0 9.6 13 22 13 22s13-12.4 13-22c0-7.2-5.8-13-13-13z" fill="#34A853"/>
+              <path d="M21 6c-7.2 0-13 5.8-13 13 0 2.9 1 5.7 2.7 8.1L26.8 9.2C25 7.2 23.1 6 21 6z" fill="#EA4335"/>
+              <path d="M34 19c0-3.9-1.7-7.4-4.5-9.8L13.2 27.1c2.5 3.5 5.4 7 7.8 9.6 3.9-4.1 13-13.2 13-17.7z" fill="#4285F4"/>
+              <path d="M10.7 27.1c1.7 2.5 3.8 5.2 5.8 7.5l9.4-11.2-7.1-7.2-8.1 10.9z" fill="#FBBC05"/>
+              <circle cx="21" cy="19" r="5.2" fill="#ffffff"/>
+              <text x="42" y="30" font-family="Inter, Arial, sans-serif" font-size="20.5" font-weight="700" fill="#3c4043">
+                Google <tspan font-weight="600" fill="#5f6368">Maps Platform</tspan>
+              </text>
+            </svg>
+          </div>
+
+          <!-- 44CHPIPS Limited Partnership Metallic Emblem -->
+          <div class="flex items-center gap-2.5 bg-slate-950 border border-sky-500/35 rounded-xl px-3 py-1.5 shadow-inner">
+            <svg viewBox="0 0 120 132" class="w-8 h-9 shrink-0" role="img" aria-label="44CHPIPS Limited Partnership">
+              <title>44CHPIPS Limited Partnership</title>
+              <polygon points="60,5 112,35 112,97 60,127 8,97 8,35" fill="#0f172a" stroke="#38bdf8" stroke-width="3.5"/>
+              <polygon points="60,17 101,41 101,91 60,115 19,91 19,41" fill="none" stroke="#94a3b8" stroke-width="2.5"/>
+              <rect x="5" y="50" width="110" height="32" rx="5" fill="#1e293b" stroke="#bae6fd" stroke-width="1.8"/>
+              <text x="60" y="71" text-anchor="middle" fill="#ffffff" font-family="Inter, sans-serif" font-size="16" font-weight="800" letter-spacing="0.6">44CHPIPS</text>
+            </svg>
+            <div>
+              <div class="text-[10px] font-mono uppercase tracking-wider text-sky-400 font-semibold">Partner ID: zugHWCox8x</div>
+              <div class="text-xs font-bold text-white leading-tight">44CHPIPS LIMITED PARTNERSHIP</div>
+            </div>
+          </div>
+
+          <!-- Primary Title & Subtitle -->
+          <div class="pl-0.5">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-400/30">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                100% PSF VALIDATED • 47/47 POE PASSED
+              </span>
+              <span class="text-[11px] font-mono text-amber-300 bg-amber-500/10 border border-amber-400/25 px-2 py-0.5 rounded-full">
+                3-WAY MATCHED ($0.00 VARIANCE)
+              </span>
+            </div>
+            <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-white mt-1">
+              PROJECT G — EXECUTIVE COMMAND CENTER DASHBOARD (ENGLISH EDITION)
+            </h1>
+            <p class="text-xs text-slate-300">
+              Chiang Khan Sovereign Green Energy &amp; ESG Data Center Hub | Master SOW Resolution Rev 6.0 (47/47 POE Passed)
+            </p>
+          </div>
+        </div>
+
+        <!-- Export & Upload Command Buttons -->
+        <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+          <label for="codexFileInput" class="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-sky-500 hover:bg-sky-400 text-slate-950 transition shadow-lg shadow-sky-500/20">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+            </svg>
+            Load Codex JSON
+          </label>
+          <input id="codexFileInput" type="file" accept=".json,application/json" class="hidden">
+
+          <button id="btnExportJson" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-600/80 transition">
+            <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Export Master JSON
+          </button>
+
+          <button id="btnExportCsv" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-600/80 transition">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+            Export 13-Yr Cash Waterfall CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Master Contract Identifiers & Live Schedule Strip -->
+      <div class="pt-2 border-t border-slate-800/90 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 text-[11px] font-mono text-slate-300">
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span><strong class="text-sky-400">DRP ID:</strong> DRPGCP-2026-9132</span>
+          <span class="text-slate-600">|</span>
+          <span><strong class="text-sky-400">gCLM:</strong> aJfKf00000009XN</span>
+          <span class="text-slate-600">|</span>
+          <span><strong class="text-sky-400">Supplier ID:</strong> SRFqhk1q4hNHCs</span>
+          <span class="text-slate-600">|</span>
+          <span><strong class="text-sky-400">Tax/DBD ID:</strong> 0423569000075</span>
+          <span class="text-slate-600">|</span>
+          <span><strong class="text-sky-400">DocuSign SOW:</strong> 18558940-C37F-81F9-806E-0D287CFB0258</span>
+          <span class="text-slate-600">|</span>
+          <span><strong class="text-sky-400">Addendum:</strong> 0D379944-4E5C-8F28-832D-867239592709</span>
+          <span class="text-slate-600">|</span>
+          <span><strong class="text-amber-300">Customer GCP Tenant:</strong> chpips-partner-network-hub (#469327958258)</span>
+        </div>
+        <div id="liveCountdownBadge" class="shrink-0 text-emerald-300 bg-emerald-950/60 border border-emerald-500/30 rounded-lg px-2.5 py-1">
+          Countdown to Dec 15, 2026 Start: Calculating...
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Content -->
+  <main class="max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Key Dates Bar + Drag-and-Drop JSON Web Crypto SHA-256 Verifier -->
+    <section class="grid grid-cols-1 xl:grid-cols-12 gap-4">
+      <!-- Key Master Schedule Windows -->
+      <div class="xl:col-span-7 glass-card rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="glass-subcard rounded-xl p-3 border-l-2 border-l-sky-400">
+          <div class="text-[10px] font-mono uppercase tracking-wider text-sky-400 font-semibold">SOW Effective &amp; Kickoff</div>
+          <div class="text-sm font-bold text-white mt-0.5">Effective: Dec 1, 2026</div>
+          <div class="text-xs text-slate-300 mt-0.5">Project Start: Dec 15, 2026</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">CEO: Mr. Phanuwat Rattanapeerapat (CPA #10638774)</div>
+        </div>
+        <div class="glass-subcard rounded-xl p-3 border-l-2 border-l-amber-400">
+          <div class="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-semibold">Pre-Rack Build Window</div>
+          <div class="text-sm font-bold text-white mt-0.5">Dec 15, 2026 – Dec 14, 2029</div>
+          <div class="text-xs text-slate-300 mt-0.5">36 Months / 1,096 Exact Days</div>
+          <div class="text-[11px] text-amber-300 mt-0.5">Gate: &gt;50% Power (≥16 Basins = 1,760 MW)</div>
+        </div>
+        <div class="glass-subcard rounded-xl p-3 border-l-2 border-l-emerald-400">
+          <div class="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-semibold">10-Yr Dual PPA Window</div>
+          <div class="text-sm font-bold text-white mt-0.5">Dec 15, 2029 – Dec 14, 2039</div>
+          <div class="text-xs text-slate-300 mt-0.5">120 Months / 3,652 Exact Days</div>
+          <div class="text-[11px] text-emerald-300 mt-0.5">4,748 Total Contract Lifecycle Days</div>
+        </div>
+      </div>
+
+      <!-- Drag-and-Drop JSON & Web Crypto SHA-256 Verifier -->
+      <div id="jsonDropZone" class="xl:col-span-5 glass-card rounded-2xl p-4 border-dashed border-2 border-sky-500/35 flex flex-col justify-between transition-all duration-200">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span id="codexSourceStatus" class="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-400/30">
+                PRE-LOADED MASTER CODEX REV 6.0
+              </span>
+              <span id="sealIntegrityBadge" class="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                CANONICAL SEAL VERIFIED
+              </span>
+            </div>
+            <p class="text-xs text-slate-300 mt-1.5">
+              Drag &amp; drop <code class="font-mono text-sky-300">PROJECT_G_MASTER_UNIFIED_CODEX_REV6_FULL.json</code> here to compute a live browser SHA-256 digest (<code class="font-mono">crypto.subtle.digest</code>) and dynamically sync all modules.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-3 pt-2.5 border-t border-slate-800 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <div class="text-[10px] font-mono uppercase text-slate-400">Live Canonical SHA-256 Digest:</div>
+            <div id="liveSha256Hash" class="font-mono text-xs text-emerald-300 truncate" title="Live SHA-256 Seal">
+              Computing SHA-256 via Web Crypto API...
+            </div>
+          </div>
+          <button id="btnCopyLiveSeal" type="button" class="shrink-0 px-2.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 transition">
+            Copy Seal
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Primary KPI Scorecard Row (4 Sovereign Master Pillars) -->
+    <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      <!-- KPI 1: PSF Fixed-Price Grant -->
+      <div class="glass-card rounded-2xl p-5 border-t-4 border-t-sky-400 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-sky-400">1. PSF Fixed-Price Grant</span>
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-sky-500/15 text-sky-300">100% Tax-Inclusive</span>
+          </div>
+          <div id="kpiGrantTotal" class="text-2xl sm:text-3xl font-extrabold font-mono text-white mt-2">$500,000,000.00</div>
+          <div class="text-xs font-semibold text-emerald-300 mt-1">
+            Net Cost to Customer: <span class="font-mono">$0.00 USD</span> (100% PSF Funded)
+          </div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-slate-800/90 space-y-1 text-xs text-slate-300">
+          <div class="flex justify-between">
+            <span class="text-slate-400">M2 First Tranche Settled:</span>
+            <span id="kpiM2Settled" class="font-mono font-semibold text-white">$50,000,000.00</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">3-Way Match Variance:</span>
+            <span class="font-mono font-semibold text-emerald-400">$0.00 USD (PO/INV/RCPT)</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Partner Out-of-Scope CFE Liability:</span>
+            <span class="font-mono font-semibold text-sky-300">$0.00 USD</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI 2: Combined Financial Backing -->
+      <div class="glass-card rounded-2xl p-5 border-t-4 border-t-amber-400 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-amber-400">2. Combined Financial Backing</span>
+            <span id="kpiCoverageBadge" class="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">329.07% of M2</span>
+          </div>
+          <div id="kpiCombinedBacking" class="text-2xl sm:text-3xl font-extrabold font-mono text-amber-300 mt-2">$164,536,305.67</div>
+          <div class="text-xs font-semibold text-slate-200 mt-1">
+            <span id="kpiBgMultiple" class="font-mono text-amber-200">33.41x</span> Coverage of 10% Contractor BG ($4.9245M)
+          </div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-slate-800/90 space-y-1 text-xs text-slate-300">
+          <div class="flex justify-between">
+            <span class="text-slate-400">Verified Paid-Up Capital:</span>
+            <span id="kpiPaidUpThb" class="font-mono font-semibold text-white">1,710,167,890.00 THB</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">KBank Ring-Fenced Cash:</span>
+            <span class="font-mono text-slate-200">$50,000,000.00 USD</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">PiPs Equity (173 Securities):</span>
+            <span class="font-mono text-emerald-300">$114,536,305.67 USD</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI 3: Clean Baseload Capacity -->
+      <div class="glass-card rounded-2xl p-5 border-t-4 border-t-emerald-400 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">3. Clean Baseload Capacity</span>
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300">24/7 Carbon-Free</span>
+          </div>
+          <div class="text-2xl sm:text-3xl font-extrabold font-mono text-white mt-2">
+            <span id="kpiTotalMw">3,300.00</span> MW
+          </div>
+          <div class="text-xs font-semibold text-cyan-300 mt-1">
+            <span id="kpiTotalGwh" class="font-mono">28,908.00 GWh/Yr</span> • 30 DS-008 Vortex Basins
+          </div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-slate-800/90 space-y-1 text-xs text-slate-300">
+          <div class="flex justify-between">
+            <span class="text-slate-400">Hybrid Solar + Storage:</span>
+            <span class="font-mono text-slate-200">Albedo Bifacial + 24 BESS</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">&gt;50% Pre-Rack Gate (M15):</span>
+            <span class="font-mono font-semibold text-amber-300">16 Basins = 1,760 MW (53.33%)</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">13-Yr Gross PEA Grid Sales:</span>
+            <span id="kpi13YrPeaShort" class="font-mono font-semibold text-emerald-300">178,352.00M THB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI 4: 9.0-Rai Earth-Bermed G-Hall & Compute Capacity -->
+      <div class="glass-card rounded-2xl p-5 border-t-4 border-t-cyan-400 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400">4. 9.0-Rai G-Hall &amp; Compute</span>
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300">PUE ≈ 1.02</span>
+          </div>
+          <div class="text-2xl sm:text-3xl font-extrabold font-mono text-white mt-2">14,549 Racks</div>
+          <div class="text-xs font-semibold text-slate-200 mt-1">
+            <span class="font-mono text-cyan-300">1,163,936 TPU/GPU Chips</span> • 14,400 sq.m. Single-Level
+          </div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-slate-800/90 space-y-1 text-xs text-slate-300">
+          <div class="flex justify-between">
+            <span class="text-slate-400">Hall Split (6.0m + Mezzanine):</span>
+            <span class="font-mono text-slate-200">7.5-Rai Hall + 1.5-Rai NOC</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">1:1 Rack Safety Cut Switches:</span>
+            <span class="font-mono font-semibold text-emerald-300">14,549 (0.0069% Blast)</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">Thermal System:</span>
+            <span class="font-mono text-sky-300">7-Day Cryogenic N2 (&lt;10°C)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Module Filter Tabs -->
+    <nav class="flex flex-wrap items-center gap-2 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800" aria-label="Command Center Module Tabs">
+      <button type="button" data-tab="ALL" class="mod-tab px-4 py-2 rounded-xl text-xs font-semibold bg-sky-500 text-slate-950 transition">
+        Unified Executive View (All Modules)
+      </button>
+      <button type="button" data-tab="FINANCE" class="mod-tab px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/70 transition">
+        Financial Ring-Fencing &amp; 329.07% Collateral
+      </button>
+      <button type="button" data-tab="BASINS" class="mod-tab px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/70 transition">
+        30 Hydro-Vortex Basins Explorer (DS-008)
+      </button>
+      <button type="button" data-tab="WATERFALL" class="mod-tab px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/70 transition">
+        13-Year Energy &amp; Clause 16.3 Waterfall
+      </button>
+      <button type="button" data-tab="GCP" class="mod-tab px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/70 transition">
+        GCP Workloads (WL-01–04), WAN &amp; SHA-256 Seals
+      </button>
+    </nav>
+
+    <!-- MODULE A: Financial Ring-Fencing, 4-Phase Tranches & 329.07% Collateral -->
+    <section id="secFinance" class="module-section grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Left 7 Cols: Ring-Fenced Accounts & 4-Phase Disbursement -->
+      <div class="lg:col-span-7 glass-card rounded-2xl p-5 flex flex-col justify-between space-y-5">
+        <div>
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <h2 class="text-base sm:text-lg font-bold text-white">
+                Financial Ring-Fencing &amp; 4-Phase PSF Tranche Schedule ($500,000,000.00 USD)
+              </h2>
+              <p class="text-xs text-slate-400">
+                98.49% Infrastructure Execution Fund ($492,450,000.00) vs. 1.51% Management &amp; Admin Cap ($7,550,000.00) • 24/7 Read-Only Bank Access
+              </p>
+            </div>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+              PO-44CHPIPS-2026-M2-001 Settled
+            </span>
+          </div>
+
+          <!-- Stacked Bar Chart: 4 Phases -->
+          <div class="h-56 w-full mb-4">
+            <canvas id="chartPhases"></canvas>
+          </div>
+
+          <!-- 4-Phase Schedule Table -->
+          <div class="overflow-x-auto rounded-xl border border-slate-800">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-900/95 text-slate-300 border-b border-slate-800">
+                  <th class="py-2.5 px-3 font-semibold">Phase &amp; Milestone</th>
+                  <th class="py-2.5 px-3 font-semibold">Execution Window (1,096 Days)</th>
+                  <th class="py-2.5 px-3 font-semibold text-right">98.49% Infra (USD)</th>
+                  <th class="py-2.5 px-3 font-semibold text-right">1.51% Mgmt (USD)</th>
+                  <th class="py-2.5 px-3 font-semibold text-right">Gross Tranche (USD)</th>
+                </tr>
+              </thead>
+              <tbody id="tablePhasesBody" class="divide-y divide-slate-800/75 font-mono"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Ring-Fenced Bank Accounts & M2 Fiduciary Disbursement Controls -->
+        <div class="space-y-3 pt-1">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <div class="glass-subcard rounded-xl p-3.5 border-l-2 border-l-sky-400">
+              <div class="font-bold text-sky-300">98.49% Infrastructure Execution Account</div>
+              <div class="font-mono text-white mt-0.5">KBank Loei/Chiang Khan A/C: 233-2-61932-5</div>
+              <div class="text-slate-400 mt-1">Total: <span class="font-mono text-slate-200">$492,450,000.00</span> | M2 Received: <span class="font-mono text-emerald-300">$49,245,000.00</span> (1,674.33M THB)</div>
+            </div>
+            <div class="glass-subcard rounded-xl p-3.5 border-l-2 border-l-indigo-400">
+              <div class="font-bold text-indigo-300">1.51% Management, Admin &amp; Waterfall Accounts</div>
+              <div class="font-mono text-white mt-0.5">KBank A/C: 233-2-85227-5 &amp; GSB: 020-4-81058-558</div>
+              <div class="text-slate-400 mt-1">Total: <span class="font-mono text-slate-200">$7,550,000.00</span> | M2 Received: <span class="font-mono text-emerald-300">$755,000.00</span> (25.67M THB)</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="glass-subcard rounded-xl p-3">
+              <div class="text-[11px] text-slate-400">M2 Net Crossed Cheque Ceiling (97%)</div>
+              <div class="text-sm font-bold font-mono text-white mt-0.5">$47,767,650.00 USD</div>
+              <div class="text-[10px] text-sky-400">A/C Payee Only • Engineer + CPA Co-Sign</div>
+            </div>
+            <div class="glass-subcard rounded-xl p-3">
+              <div class="text-[11px] text-slate-400">3% Withholding Tax (Sec 50 Bis / P.N.D.53)</div>
+              <div class="text-sm font-bold font-mono text-amber-300 mt-0.5">$1,477,350.00 USD</div>
+              <div class="text-[10px] text-slate-400">Form 1042-S &amp; Tax-Inclusive Absorbed</div>
+            </div>
+            <div class="glass-subcard rounded-xl p-3">
+              <div class="text-[11px] text-slate-400">10% Mandatory Contractor BG</div>
+              <div class="text-sm font-bold font-mono text-emerald-300 mt-0.5">$4,924,500.00 USD</div>
+              <div class="text-[10px] text-slate-400">24/7 Read-Only K-eDocument Active</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right 5 Cols: 329.07% Master Collateral Security Portfolio -->
+      <div class="lg:col-span-5 glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div>
+              <h2 class="text-base sm:text-lg font-bold text-white">
+                Master Collateral Breakdown (329.07% of M2)
+              </h2>
+              <p class="text-xs text-slate-400">
+                CERT-44CHPIPS-KBANK-PIPS-2026-M2 • $164,536,305.67 USD Combined Security
+              </p>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-400/30">
+              33.41x BG
+            </span>
+          </div>
+
+          <!-- Doughnut Chart -->
+          <div class="h-52 w-full my-3">
+            <canvas id="chartCollateral"></canvas>
+          </div>
+
+          <!-- Itemized Collateral Cards -->
+          <div class="space-y-2.5 text-xs">
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/85 border border-slate-800">
+              <div>
+                <div class="font-semibold text-sky-300">Kasikornbank Verified Cash Deposit</div>
+                <div class="text-[11px] text-slate-400 font-mono">A/C 233-2-61932-5 ($49.245M) + 233-2-85227-5 ($0.755M)</div>
+              </div>
+              <div class="text-right font-mono">
+                <div class="font-bold text-white">$50,000,000.00</div>
+                <div class="text-[11px] text-sky-400">100.00% (1.00x M2)</div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/85 border border-slate-800">
+              <div>
+                <div class="font-semibold text-emerald-300">PiPs Equity — NASDAQ Exchange (68 Holdings)</div>
+                <div class="text-[11px] text-slate-400">Includes 57,247 Alphabet (GOOGL+GOOG) shares = $20,026,068.02</div>
+              </div>
+              <div class="text-right font-mono">
+                <div class="font-bold text-white">$101,497,613.97</div>
+                <div class="text-[11px] text-emerald-400">AU$145,307,949.85</div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/85 border border-slate-800">
+              <div>
+                <div class="font-semibold text-indigo-300">PiPs Equity — NYSE Exchange (104 Holdings)</div>
+                <div class="text-[11px] text-slate-400">Blue-chip institutional holdings (ANET, UNH, CVX, MCD, BLK, MA)</div>
+              </div>
+              <div class="text-right font-mono">
+                <div class="font-bold text-white">$13,022,806.70</div>
+                <div class="text-[11px] text-indigo-400">AU$18,643,960.22</div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/85 border border-slate-800">
+              <div>
+                <div class="font-semibold text-amber-300">PiPs Equity — AMEX Exchange (1 Holding)</div>
+                <div class="text-[11px] text-slate-400">Park National Corp (PRK.AMEX — 90 Shares)</div>
+              </div>
+              <div class="text-right font-mono">
+                <div class="font-bold text-white">$15,885.00</div>
+                <div class="text-[11px] text-amber-400">AU$22,741.59</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-400/30 space-y-1">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-semibold text-amber-200">PiPs Verified Portfolio Subtotal (173 Securities):</span>
+            <span class="font-mono font-bold text-white">$114,536,305.67 (AU$163,974,651.66)</span>
+          </div>
+          <div class="flex items-center justify-between text-xs pt-1 border-t border-amber-400/20">
+            <span class="font-bold text-amber-300">Total Combined Financial Backing:</span>
+            <span class="font-mono font-extrabold text-sm text-amber-300">$164,536,305.67 USD (329.07%)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE B: Interactive 30 Hydro-Vortex Basins Explorer (BASIN-01 to BASIN-30) -->
+    <section id="secBasins" class="module-section glass-card rounded-2xl p-5 space-y-4">
+      <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h2 class="text-base sm:text-lg font-bold text-white">
+              Interactive 30 Hydro-Vortex Basins Explorer (BASIN-01 to BASIN-30 | Blueprint DS-008)
+            </h2>
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-rose-500/15 text-rose-300 border border-rose-400/30">
+              IRONCLAD LAW: 9.0-RAI G-HALL &amp; FINAL 14 BASINS NEVER MORTGAGED
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">
+            Unit Output: 110.00 MW (963.60 GWh/Yr) per basin • 4.50m conical spiraling basins on 20° cascade slopes + 600,000 L/min KSB 2-Stage Tandem Pumps • Pre-Rack Gate (&gt;1,650.00 MW) unlocked at Wave 2: 16 Basins = 1,760.00 MW (53.33% / 15,417.60 GWh/Yr)
+          </p>
+        </div>
+
+        <!-- Wave Filters, View Mode Toggle & Search -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" data-wave="ALL" class="basin-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-sky-500 text-slate-950 transition">
+            All (30 Basins • 3,300 MW)
+          </button>
+          <button type="button" data-wave="WAVE_1_SEED_4" class="basin-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 transition">
+            Wave 1 Seed Equity (01–04)
+          </button>
+          <button type="button" data-wave="WAVE_2_GATE_16" class="basin-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 transition">
+            Wave 2 &gt;50% Gate Unlock (05–16)
+          </button>
+          <button type="button" data-wave="WAVE_3_UNENCUMBERED_30" class="basin-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 transition">
+            Wave 3 Debt-Free Forever (17–30)
+          </button>
+
+          <input id="basinSearch" type="text" placeholder="Filter BASIN-16..." class="px-3 py-1.5 rounded-xl text-xs bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-sky-400 w-36 font-mono">
+
+          <button id="btnToggleBasinView" type="button" class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold bg-slate-900 hover:bg-slate-800 text-sky-300 border border-slate-700 transition">
+            Switch to Table View
+          </button>
+        </div>
+      </div>
+
+      <!-- Visual Scaling & >50% Gate Bar -->
+      <div class="glass-subcard rounded-xl p-4 space-y-2">
+        <div class="flex flex-wrap justify-between gap-2 text-[11px] font-mono">
+          <span class="text-sky-300">Wave 1 (Basins 01–04): 440 MW (13.33%)</span>
+          <span class="text-rose-300">Google 14,549-Rack Load: 1,484.02 MW</span>
+          <span class="text-slate-300">50.0% Target Threshold: 1,650.00 MW</span>
+          <span class="text-amber-300 font-bold">Wave 2 Unlock (Basins 01–16): 1,760 MW (53.33% • 15,417.6 GWh/Yr)</span>
+          <span class="text-emerald-300 font-bold">Wave 3 Full (Basins 01–30): 3,300 MW (100% • 28,908 GWh/Yr)</span>
+        </div>
+        <div class="relative h-3.5 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+          <div class="absolute top-0 left-0 h-full bg-sky-500/85" style="width: 13.33%" title="Wave 1: 440 MW"></div>
+          <div class="absolute top-0 left-[13.33%] h-full bg-amber-500/85" style="width: 40.00%" title="Wave 2: +1,320 MW = 1,760 MW"></div>
+          <div class="absolute top-0 left-[53.33%] h-full bg-emerald-500/85" style="width: 46.67%" title="Wave 3: +1,540 MW Unencumbered = 3,300 MW"></div>
+          <div class="absolute top-0 left-1/2 h-full w-0.5 bg-white" title="50% Gate (1,650 MW)"></div>
+        </div>
+      </div>
+
+      <!-- Basins Grid View -->
+      <div id="basinsCardGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3"></div>
+
+      <!-- Basins Compact Table View (Hidden by Default) -->
+      <div id="basinsTableWrap" class="hidden overflow-x-auto rounded-xl border border-slate-800 max-h-[460px] overflow-y-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead class="sticky top-0 bg-slate-900 text-slate-300 border-b border-slate-800">
+            <tr>
+              <th class="py-2.5 px-3 font-semibold">Basin ID</th>
+              <th class="py-2.5 px-3 font-semibold">Scaling Wave</th>
+              <th class="py-2.5 px-3 font-semibold text-right">Unit MW</th>
+              <th class="py-2.5 px-3 font-semibold text-right">Cumulative MW</th>
+              <th class="py-2.5 px-3 font-semibold text-right">Cumulative GWh/Yr</th>
+              <th class="py-2.5 px-3 font-semibold text-center">&gt;50% Gate Status</th>
+              <th class="py-2.5 px-3 font-semibold">Non-Recourse Lien / Mortgage Status</th>
+            </tr>
+          </thead>
+          <tbody id="basinsTableBody" class="divide-y divide-slate-800/70 font-mono"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MODULE C: 13-Year Energy & Clause 16.3 Cash-Flow Waterfall (2026–2039) -->
+    <section id="secWaterfall" class="module-section glass-card rounded-2xl p-5 space-y-5">
+      <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-white">
+            13-Year Clean Energy &amp; Clause 16.3 Cash-Flow Waterfall (2026–2039 | 4,748 Total Days)
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">
+            3-Yr Pre-Rack Grid Sales: 19,272.00M THB + 10-Yr Dual PPA PEA Sales: 159,080.00M THB = <strong>178,352.00M THB Gross</strong> • Tier 1 (20% 44CHPIPS): <strong>35,670.40M THB</strong> | Tier 2 (80% Basin Debt-Service &amp; Google Residual): <strong>142,681.60M THB</strong> • Plus <strong>455,000.00M THB ($13,000M USD)</strong> Google Cloud Electricity OpEx Saved &amp; <strong>4.54x</strong> Bangkok/Chonburi DC Grid Offset
+          </p>
+        </div>
+
+        <!-- Interactive Chart Mode Switcher -->
+        <div class="inline-flex rounded-xl bg-slate-900 p-1 border border-slate-800 shrink-0 self-start">
+          <button type="button" id="btnChartSplit" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-sky-500 text-slate-950 transition">
+            Annual Waterfall Split (20% / 80% + OpEx Saved)
+          </button>
+          <button type="button" id="btnChartCumulative" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition">
+            13-Year Cumulative Cash &amp; Google OpEx Savings
+          </button>
+        </div>
+      </div>
+
+      <!-- Waterfall Summary Mini-Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="glass-subcard rounded-xl p-3.5 border-l-2 border-l-rose-400">
+          <div class="text-[11px] text-slate-400">Google Free Clean Power (10-Yr PPA)</div>
+          <div class="text-base font-extrabold font-mono text-white mt-0.5">130,000.00 GWh (@ 0.00 THB)</div>
+          <div class="text-[11px] text-emerald-300 font-semibold">Saves 455,000M THB ($13,000M USD)</div>
+        </div>
+        <div class="glass-subcard rounded-xl p-3.5 border-l-2 border-l-indigo-400">
+          <div class="text-[11px] text-slate-400">13-Yr Gross PEA Sales (@ 1.00 THB/kWh)</div>
+          <div class="text-base font-extrabold font-mono text-white mt-0.5">178,352,000,000 THB</div>
+          <div class="text-[11px] text-slate-300">19,272M Pre-Rack + 159,080M Dual PPA</div>
+        </div>
+        <div class="glass-subcard rounded-xl p-3.5 border-l-2 border-l-amber-400">
+          <div class="text-[11px] text-slate-400">Tier 1 — 20% 44CHPIPS Benefit Share</div>
+          <div class="text-base font-extrabold font-mono text-amber-300 mt-0.5">35,670,400,000 THB</div>
+          <div class="text-[11px] text-slate-300">3,854.4M Pre-Rack + 31,816.0M PPA</div>
+        </div>
+        <div class="glass-subcard rounded-xl p-3.5 border-l-2 border-l-sky-400">
+          <div class="text-[11px] text-slate-400">Tier 2 — 80% Debt-Service &amp; Google Pool</div>
+          <div class="text-base font-extrabold font-mono text-sky-300 mt-0.5">142,681,600,000 THB</div>
+          <div class="text-[11px] text-slate-300">15,417.6M Pre-Rack + 127,264.0M PPA</div>
+        </div>
+      </div>
+
+      <!-- 13-Year Interactive Chart -->
+      <div class="h-72 sm:h-80 w-full">
+        <canvas id="chartWaterfall"></canvas>
+      </div>
+
+      <!-- Full 13-Row Annual Schedule Table -->
+      <div class="overflow-x-auto rounded-xl border border-slate-800">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="bg-slate-900/95 text-slate-300 border-b border-slate-800">
+              <th class="py-2.5 px-3 font-semibold">Year</th>
+              <th class="py-2.5 px-3 font-semibold">Contract Period</th>
+              <th class="py-2.5 px-3 font-semibold">Exact Window</th>
+              <th class="py-2.5 px-3 font-semibold text-center">Basins (Active → EOY)</th>
+              <th class="py-2.5 px-3 font-semibold text-right">Google Free (GWh)</th>
+              <th class="py-2.5 px-3 font-semibold text-right">Google OpEx Saved (THB)</th>
+              <th class="py-2.5 px-3 font-semibold text-right">PEA Grid (GWh)</th>
+              <th class="py-2.5 px-3 font-semibold text-right">PEA Gross 100% (THB)</th>
+              <th class="py-2.5 px-3 font-semibold text-right">Tier 1: 20% 44CHPIPS (THB)</th>
+              <th class="py-2.5 px-3 font-semibold text-right">Tier 2: 80% Debt+Google (THB)</th>
+            </tr>
+          </thead>
+          <tbody id="tableWaterfallBody" class="divide-y divide-slate-800/70 font-mono"></tbody>
+          <tfoot id="tableWaterfallFoot" class="bg-sky-950/55 border-t-2 border-sky-500/50 font-mono font-bold text-white"></tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- MODULE D: GCP Tenant Workloads (WL-01 to WL-04), Virtual WAN, 60-Drone Pipeline & SHA-256 Audit Chain -->
+    <section id="secGcp" class="module-section space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left 7 Cols: Active Workloads WL-01 to WL-04 + Virtual WAN & Drone Pipeline -->
+        <div class="lg:col-span-7 glass-card rounded-2xl p-5 space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 class="text-base sm:text-lg font-bold text-white">
+                Customer GCP Tenant Workloads (WL-01 to WL-04) &amp; Spatial WAN Pipeline
+              </h2>
+              <p class="text-xs text-slate-400">
+                Isolated Customer GCP Tenant: <code class="font-mono text-sky-300">chpips-partner-network-hub (#469327958258 | Org: 694832069352)</code>
+              </p>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-mono bg-sky-500/15 text-sky-300 border border-sky-500/30">
+              Zero-Trust Enforced
+            </span>
+          </div>
+
+          <!-- 4 Workload Cards -->
+          <div id="workloadsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+
+          <!-- Dual GCS Vaults, 3,891.20 Tbps Virtual WAN & 60-Drone Pipeline -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="glass-subcard rounded-xl p-3.5 space-y-1.5">
+              <div class="font-bold text-cyan-300">3,891.20 Tbps Software-Defined Virtual WAN</div>
+              <p class="text-slate-300 leading-relaxed">
+                Carrier-Neutral MMR with <strong>80 fiber pairs</strong> (2,938.88 Tbps sustained sync, <strong>&lt;5ms latency</strong>, 0% packet loss, Zero Hardware Modification) linking Chiang Khan to Bangkok Cloud Region, Chonburi EEC, TalayLink Subsea Cable, and Mekong Ring.
+              </p>
+            </div>
+            <div class="glass-subcard rounded-xl p-3.5 space-y-1.5">
+              <div class="font-bold text-emerald-300">60-Drone 1–2 cm GSD Thailand 3D Tiles (&lt;18 Mos)</div>
+              <p class="text-slate-300 leading-relaxed">
+                60 CAAT/NBTC-licensed BVLOS LiDAR/RTK-GPS drones + 500TB iHaveCPU Rig + dual UNAS Pro 8 vaults streaming nationwide 3D Photorealistic Tiles &amp; wildfire early-warning into <strong>Google Maps Platform</strong> &amp; <strong>Vertex AI</strong>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Dual Private Zero-Trust GCS Vaults -->
+          <div class="p-3.5 rounded-xl bg-slate-950/85 border border-slate-800 space-y-1.5 text-xs">
+            <div class="text-[11px] font-mono uppercase text-sky-400 font-bold">Dual Zero-Trust Google Cloud Storage (GCS) Vaults (45 Authorized Principals)</div>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-mono text-[11px] text-slate-200">
+              <span>Primary Asia Vault: <code class="text-emerald-300">gs://projectg44goog</code></span>
+              <span>Secondary Mirror Vault: <code class="text-amber-300">gs://cloud-ai-platform-cacc6af5-a485-43bc-b522-393cca51bcd5</code></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 5 Cols: Clause 16.1–16.3 Summary & Upstream Cryptographic SHA-256 Ledger -->
+        <div class="lg:col-span-5 glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <h2 class="text-base sm:text-lg font-bold text-white">
+              Clause 16.1–16.3 Governance &amp; Upstream SHA-256 Ledger
+            </h2>
+            <div class="space-y-2 text-xs text-slate-300 leading-relaxed">
+              <div class="p-3 rounded-xl bg-slate-900/85 border border-slate-800">
+                <strong class="text-sky-300">Clause 16.1 (Strategic Consolidation &amp; 4.54x Offset):</strong>
+                Google Cloud holds 100% strategic consolidation &amp; global 24/7 Carbon-Free ESG credit (compensating Bangkok &amp; Chonburi DC draw by 4.54x); 44CHPIPS holds 100% independent Thai statutory title to land, 9.0-Rai G-Hall, and 30 basins.
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/85 border border-slate-800">
+                <strong class="text-emerald-300">Clause 16.2 (Co-Owned Joint IP):</strong>
+                All project engineering—9.0-Rai Earth-Bermed G-Hall, <code class="font-mono">TR-2026-WFW-01</code> Wet-on-Wet Para-Rubber Concrete, <code class="font-mono">DS-008</code> Vortex Turbines, Cryogenic N2 loops, Drone-to-Maps pipelines, and Virtual Ethernet—is co-owned as Joint IP by 44CHPIPS &amp; Google Cloud (30 verified simulation assets).
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/85 border border-slate-800">
+                <strong class="text-amber-300">Clause 16.3 (20% / 80% Waterfall &amp; Non-Hypothecation):</strong>
+                13,000 GWh/Yr free to Google Cloud; 15,908 GWh/Yr sold to PEA @ 1.00 THB/kWh allocated 20% to 44CHPIPS and 80% to retire ring-fenced Wave 1 &amp; 2 basin mortgages first, then 100% net residual cash remitted to Google Cloud.
+              </div>
+            </div>
+          </div>
+
+          <!-- Upstream SHA-256 Cryptographic Seal Chain -->
+          <div class="space-y-2 pt-1">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-300">
+              Verified Upstream Cryptographic SHA-256 Seal Ledger (Click to Copy)
+            </div>
+            <div id="sealLedgerContainer" class="space-y-1.5 max-h-[270px] overflow-y-auto pr-1"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-slate-800/80 py-5 mt-8 text-center text-xs text-slate-400">
+    PROJECT G — Executive Command Center Dashboard (Official English Edition) • Executed Solely by 44CHPIPS Limited Partnership (Partner ID: zugHWCox8x) for Google Cloud • Master SOW Resolution Rev 6.0
+  </footer>
+
+  <!-- Standalone Application Script & Pre-Loaded Master Codex Dataset -->
+  <script>
+    /**
+     * Construct the complete verified PROJECT_G_MASTER_UNIFIED_CODEX_REV6_FULL dataset
+     * in 100% English aligned with Master SOW Resolution Rev 6.0.
+     */
+    function createVerifiedMasterCodex() {
+      const basins = [];
+      for (let i = 1; i <= 30; i++) {
+        const wave = i <= 4
+          ? 'WAVE_1_SEED_4'
+          : (i <= 16 ? 'WAVE_2_GATE_16' : 'WAVE_3_UNENCUMBERED_30');
+        const waveLabel = i <= 4
+          ? 'Wave 1: Seed Equity'
+          : (i <= 16 ? 'Wave 2: >50% Gate Unlock' : 'Wave 3: Forever Debt-Free');
+        const lien = i <= 16
+          ? 'Ring-fenced non-recourse basin mortgage (retired by 80% PEA pool)'
+          : '100% Debt-Free & Unencumbered Forever (Ironclad Covenant)';
+        const cumMw = +(110 * i).toFixed(2);
+        const cumGwh = +(963.6 * i).toFixed(2);
+
+        basins.push({
+          basin_id: `BASIN-${String(i).padStart(2, '0')}`,
+          wave,
+          wave_label: waveLabel,
+          unit_mw: 110.00,
+          unit_gwh_yr: 963.60,
+          cumulative_mw: cumMw,
+          cumulative_gwh_yr: cumGwh,
+          share_of_3300mw_pct: +((i / 30) * 100).toFixed(2),
+          above_50pct_rack_gate: cumMw > 1650.00,
+          lien_status: lien
+        });
+      }
+
+      const annualWaterfall = [
+        {
+          project_year: 1,
+          period: 'PRE-RACK-Y01',
+          window: 'Dec 15, 2026 – Dec 14, 2027',
+          operating_basins: 0,
+          completed_basins_eoy: 4,
+          google_free_gwh: 0.00,
+          google_opex_saved_thb: 0.00,
+          pea_sales_gwh: 0.00,
+          pea_gross_thb: 0.00,
+          chpips_20pct_thb: 0.00,
+          debt_and_google_80pct_thb: 0.00,
+          cumulative_pea_gross_thb: 0.00
+        },
+        {
+          project_year: 2,
+          period: 'PRE-RACK-Y02',
+          window: 'Dec 15, 2027 – Dec 14, 2028',
+          operating_basins: 4,
+          completed_basins_eoy: 16,
+          google_free_gwh: 0.00,
+          google_opex_saved_thb: 0.00,
+          pea_sales_gwh: 3854.40,
+          pea_gross_thb: 3854400000.00,
+          chpips_20pct_thb: 770880000.00,
+          debt_and_google_80pct_thb: 3083520000.00,
+          cumulative_pea_gross_thb: 3854400000.00
+        },
+        {
+          project_year: 3,
+          period: 'PRE-RACK-Y03',
+          window: 'Dec 15, 2028 – Dec 14, 2029',
+          operating_basins: 16,
+          completed_basins_eoy: 30,
+          google_free_gwh: 0.00,
+          google_opex_saved_thb: 0.00,
+          pea_sales_gwh: 15417.60,
+          pea_gross_thb: 15417600000.00,
+          chpips_20pct_thb: 3083520000.00,
+          debt_and_google_80pct_thb: 12334080000.00,
+          cumulative_pea_gross_thb: 19272000000.00
+        }
+      ];
+
+      let runningPea = 19272000000.00;
+      for (let py = 1; py <= 10; py++) {
+        runningPea += 15908000000.00;
+        annualWaterfall.push({
+          project_year: 3 + py,
+          period: `DUAL-PPA-Y${String(py).padStart(2, '0')}`,
+          window: `Dec 15, ${2028 + py} – Dec 14, ${2029 + py}`,
+          operating_basins: 30,
+          completed_basins_eoy: 30,
+          google_free_gwh: 13000.00,
+          google_opex_saved_thb: 45500000000.00,
+          pea_sales_gwh: 15908.00,
+          pea_gross_thb: 15908000000.00,
+          chpips_20pct_thb: 3181600000.00,
+          debt_and_google_80pct_thb: 12726400000.00,
+          cumulative_pea_gross_thb: runningPea
+        });
+      }
+
+      return {
+        codex_id: 'PROJECT-G-SOVEREIGN-MASTER-CODEX-REV6.0-FULL',
+        schema_version: '6.0.0-ENGLISH-PRODUCTION',
+        drp_id: 'DRPGCP-2026-9132',
+        gclm_id: 'aJfKf00000009XN',
+        partner_id: 'zugHWCox8x',
+        supplier_id: 'SRFqhk1q4hNHCs',
+        tax_dbd_id: '0423569000075',
+        docusign_master_sow: '18558940-C37F-81F9-806E-0D287CFB0258',
+        docusign_addendum: '0D379944-4E5C-8F28-832D-867239592709',
+        gcp_tenant_project: 'chpips-partner-network-hub (469327958258)',
+        sow_effective_date: '2026-12-01',
+        pre_rack_window: '2026-12-15 to 2029-12-14 (36 Months / 1,096 Days)',
+        dual_ppa_window: '2029-12-15 to 2039-12-14 (120 Months / 3,652 Days)',
+        total_lifecycle_days: 4748,
+        financials: {
+          total_grant_tax_inclusive_usd: 500000000.00,
+          net_cost_to_customer_usd: 0.00,
+          infra_98_49_usd: 492450000.00,
+          mgmt_1_51_usd: 7550000.00,
+          m2_3way_matched_usd: 50000000.00,
+          verified_paid_up_capital_thb: 1710167890.00,
+          combined_backing_usd: 164536305.67,
+          m2_collateral_coverage_pct: 329.07,
+          bg_coverage_multiple_x: 33.41,
+          combined_13yr_pea_gross_thb: 178352000000.00,
+          combined_13yr_44chpips_20pct_thb: 35670400000.00,
+          combined_13yr_80pct_pool_thb: 142681600000.00,
+          ten_yr_google_power_opex_saved_thb: 455000000000.00,
+          phases: [
+            {
+              phase: 'Phase 1 (M2)',
+              window: 'Dec 15, 2026 – Apr 14, 2027 (121 Days)',
+              infra_usd: 49245000.00,
+              mgmt_usd: 755000.00,
+              total_usd: 50000000.00,
+              status: '100% Settled & 3-Way Matched'
+            },
+            {
+              phase: 'Phase 2 (M8)',
+              window: 'Apr 15, 2027 – Apr 14, 2028 (366 Days)',
+              infra_usd: 147735000.00,
+              mgmt_usd: 2265000.00,
+              total_usd: 150000000.00,
+              status: 'POE-Gated (G-Hall + Wave 1: 4 Basins)'
+            },
+            {
+              phase: 'Phase 3 (M15)',
+              window: 'Apr 15, 2028 – Apr 14, 2029 (365 Days)',
+              infra_usd: 172357500.00,
+              mgmt_usd: 2642500.00,
+              total_usd: 175000000.00,
+              status: 'POE-Gated (>50% Gate: 16 Basins + Cryo N2)'
+            },
+            {
+              phase: 'Phase 4 (M21)',
+              window: 'Apr 15, 2029 – Dec 14, 2029 (244 Days)',
+              infra_usd: 123112500.00,
+              mgmt_usd: 1887500.00,
+              total_usd: 125000000.00,
+              status: 'POE-Gated (30 Basins & Pre-Rack Handover)'
+            }
+          ],
+          collateral: {
+            kbank_cash_usd: 50000000.00,
+            nasdaq_usd: 101497613.97,
+            nyse_usd: 13022806.70,
+            amex_usd: 15885.00
+          }
+        },
+        workloads: [
+          {
+            id: 'WL-01-IAM-GCS-ZEROTRUST',
+            milestone: 'Phase 1 (M2)',
+            services: 'Cloud IAM, Cloud Storage (GCS), Cloud Logging & Monitoring',
+            detail: 'Enforces Zero-Trust Public Access Prevention & 45 principal bindings across dual GCS vaults.'
+          },
+          {
+            id: 'WL-02-VERTEX-ACOUSTIC-STRUCTURAL',
+            milestone: 'Phase 2 (M8)',
+            services: 'Vertex AI Telemetry Engine, GCS Payload Logging',
+            detail: 'Verifies 100% external sound containment & 0% Wet-on-Wet para-rubber concrete delamination.'
+          },
+          {
+            id: 'WL-03-GCE-CRYO-MICROGRID',
+            milestone: 'Phase 3 (M15)',
+            services: 'Compute Engine Control Nodes, Vertex AI, GCS',
+            detail: 'Regulates 7-Day Rotating Cryogenic N2 (<10°C dry air, PUE ~ 1.02) & >50% 16-Basin power gate.'
+          },
+          {
+            id: 'WL-04-MAPS3D-VIRTUAL-WAN',
+            milestone: 'Phase 4 (M21)',
+            services: 'Google Maps Platform 3D Tiles, Vertex AI, GCE, GCS',
+            detail: 'Ingests 60-drone 1–2 cm GSD Thailand 3D Tiles (<18 mos) & monitors 3,891.20 Tbps Virtual WAN.'
+          }
+        ],
+        itemized_30_basins: basins,
+        annual_13yr_cash_waterfall: annualWaterfall,
+        upstream_sha256_seals: [
+          { label: 'PO & Buying Cases Master (#03259018 & #03226706)', hash: '9342242cfe88a7a42ecf07579ad8c2ad3b7b224623a04392d4083447c3f21102' },
+          { label: '3-Way Match PO Voucher (PO-44CHPIPS-2026-M2-001)', hash: '42d091a97f40e28c9a70cb02885530fdcca4cd055d7ecaf98b4865bf4af1defb' },
+          { label: 'Partner Profile-to-PO Seal (PD-46125 / SRFqhk1q4hNHCs)', hash: '10d098a16b6f4e42018f79197e784db00e7f0b6460e22cd9ce2ed63368a84ec5' },
+          { label: 'M2 Budget Approval Resolution (APPR-44CHPIPS-2026-M2-50M)', hash: '6fe529d544ec06237567cb7ffb975f18972d4bbf32bde747ccbb0167b0474d42' },
+          { label: 'Official Funds Receipt EN (RCPT-44CHPIPS-2026-M2-001)', hash: 'b2f983cec2b9848cb518734cf0b9d5f06afc2d6640fa646e0ec741af3733f44e' },
+          { label: 'Official Funds Receipt Voucher (Bilingual M2 Seal)', hash: 'a075a6e753e2b157b2fdb5f345354acb7dcdc30f819c1adc56d4c022ee3c59f6' },
+          { label: 'Unified V7.0 M2 Receipt PDF Seal', hash: 'fcab06222ec22ebf528b401117b94219341336d14a8d090f126870bde04d1dc4' },
+          { label: 'KBank & PiPs 329.07% Collateral (CERT-44CHPIPS-M2)', hash: 'c7d59ddbe92087bda2c15ddf6aa06d217d29187cc8b3c4a1b3a208cb2b82769d' },
+          { label: 'KBank Loei Certificate Request (44CHPIPS-KBANK-2569/M2-001)', hash: 'aeb18ae1abca9dce3da81955c7f0f8cade3a20661bbba87f932d462b5b2309cd' },
+          { label: '30 Simulation Assets Joint IP Clause 16.2 Manifest', hash: '2bf148271e4504f4fbb972ef1f11714c55801a7f617d1f2864104e8a39bcca7f' }
+        ]
+      };
+    }
+
+    // State Variables
+    let codex = createVerifiedMasterCodex();
+    let activeWaveFilter = 'ALL';
+    let basinQuery = '';
+    let basinDisplayMode = 'GRID'; // 'GRID' or 'TABLE'
+    let waterfallChartType = 'SPLIT'; // 'SPLIT' or 'CUMULATIVE'
+    let currentSha256 = '';
+
+    // Chart.js Instances
+    let chartPhasesObj = null;
+    let chartCollateralObj = null;
+    let chartWaterfallObj = null;
+
+    // Formatting Helpers
+    const fmtUSD = (val, dec = 2) =>
+      '$' + Number(val).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    const fmtNum = (val, dec = 2) =>
+      Number(val).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+
+    // Custom Toast Notification (No alert())
+    function notify(msg, variant = 'info') {
+      const stack = document.getElementById('toastStack');
+      const palette = {
+        success: 'border-emerald-400/50 bg-slate-900/95 text-emerald-200',
+        info: 'border-sky-400/50 bg-slate-900/95 text-sky-200',
+        warn: 'border-amber-400/50 bg-slate-900/95 text-amber-200',
+        error: 'border-rose-400/50 bg-slate-900/95 text-rose-200'
+      };
+      const item = document.createElement('div');
+      item.className = `pointer-events-auto px-4 py-3 rounded-xl border shadow-2xl text-xs font-medium transition-all duration-300 ${palette[variant] || palette.info}`;
+      item.textContent = msg;
+      stack.appendChild(item);
+      setTimeout(() => {
+        item.style.opacity = '0';
+        setTimeout(() => item.remove(), 300);
+      }, 3800);
+    }
+
+    // Clipboard Helper (execCommand for iframe safety)
+    function copyTextToClipboard(text, label = 'Hash') {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      notify(`Copied ${label} to clipboard.`, 'success');
+    }
+
+    // Canonical JSON Stringifier (Sorted Keys to match Python json.dumps(sort_keys=True))
+    function canonicalizeJson(value) {
+      if (value === null || typeof value !== 'object') {
+        return JSON.stringify(value);
+      }
+      if (Array.isArray(value)) {
+        return '[' + value.map(canonicalizeJson).join(',') + ']';
+      }
+      const keys = Object.keys(value).sort();
+      return '{' + keys.map(k => JSON.stringify(k) + ':' + canonicalizeJson(value[k])).join(',') + '}';
+    }
+
+    // Web Crypto SHA-256 Digest
+    async function sha256Hex(str) {
+      const bytes = new TextEncoder().encode(str);
+      const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Live Countdown to Project Start (Dec 15, 2026)
+    function updateCountdownStrip() {
+      const badge = document.getElementById('liveCountdownBadge');
+      const now = new Date();
+      const effective = new Date('2026-12-01T00:00:00+07:00');
+      const kickoff = new Date('2026-12-15T00:00:00+07:00');
+      const diffKickoffMs = kickoff - now;
+      const diffEffMs = effective - now;
+
+      if (diffKickoffMs > 0) {
+        const daysKick = Math.ceil(diffKickoffMs / (1000 * 60 * 60 * 24));
+        const effText = diffEffMs > 0
+          ? `Effective in ${Math.ceil(diffEffMs / (1000 * 60 * 60 * 24))}d (Dec 1, 2026)`
+          : 'SOW Effective Active';
+        badge.textContent = `${effText} • Kickoff in ${daysKick}d (Dec 15, 2026)`;
+      } else {
+        badge.textContent = 'ACTIVE EXECUTION: 36-Month Pre-Rack Build In Progress';
+      }
+    }
+
+    // Normalize Uploaded JSON (Supports both Compiler Codex & Structured 01-08 Codex)
+    function normalizeCodexPayload(parsed) {
+      const fallback = createVerifiedMasterCodex();
+
+      if (parsed.financials && Array.isArray(parsed.itemized_30_basins)) {
+        return {
+          ...fallback,
+          ...parsed,
+          financials: {
+            ...fallback.financials,
+            ...parsed.financials,
+            phases: parsed.financials.phases || fallback.financials.phases,
+            collateral: parsed.financials.collateral || fallback.financials.collateral
+          },
+          itemized_30_basins: parsed.itemized_30_basins.map((b, idx) => ({
+            ...fallback.itemized_30_basins[idx],
+            ...b
+          })),
+          annual_13yr_cash_waterfall: parsed.annual_13yr_cash_waterfall || fallback.annual_13yr_cash_waterfall
+        };
+      }
+
+      const sec03 = parsed['03_financial_architecture_3way_match_and_329pct_collateral'];
+      const sec05 = parsed['05_clean_power_30_vortex_basins_and_clause_16_3_waterfall'];
+
+      if (sec03) {
+        if (Array.isArray(sec03.four_phase_milestone_disbursement_schedule)) {
+          fallback.financials.phases = sec03.four_phase_milestone_disbursement_schedule.map(p => ({
+            phase: `${p.phase} (${p.milestone})`,
+            window: `${p.window} (${p.days} Days)`,
+            infra_usd: p.infra_98_49_usd,
+            mgmt_usd: p.mgmt_1_51_usd,
+            total_usd: p.gross_tax_inclusive_usd,
+            status: p.status
+          }));
+        }
+        if (sec03.dbd_capital_and_329pct_master_collateral) {
+          const col = sec03.dbd_capital_and_329pct_master_collateral;
+          fallback.financials.verified_paid_up_capital_thb = col.verified_new_paid_up_capital_thb || fallback.financials.verified_paid_up_capital_thb;
+          fallback.financials.combined_backing_usd = col.total_combined_financial_backing_usd || fallback.financials.combined_backing_usd;
+          fallback.financials.m2_collateral_coverage_pct = col.coverage_vs_m2_50m_tranche_pct || fallback.financials.m2_collateral_coverage_pct;
+          fallback.financials.bg_coverage_multiple_x = col.coverage_vs_10pct_contractor_bg_multiple || fallback.financials.bg_coverage_multiple_x;
+        }
+      }
+
+      if (sec05 && sec05.dual_ppa_10yr_allocation_and_waterfall) {
+        const wf = sec05.dual_ppa_10yr_allocation_and_waterfall.clause_16_3_revenue_split_and_pre_rack_cash;
+        if (wf) {
+          fallback.financials.combined_13yr_pea_gross_thb = wf.combined_13yr_gross_pea_cash_thb || fallback.financials.combined_13yr_pea_gross_thb;
+          fallback.financials.combined_13yr_44chpips_20pct_thb = wf.combined_13yr_44chpips_20pct_thb || fallback.financials.combined_13yr_44chpips_20pct_thb;
+          fallback.financials.combined_13yr_80pct_pool_thb = wf.combined_13yr_80pct_debt_and_google_residual_pool_thb || fallback.financials.combined_13yr_80pct_pool_thb;
+        }
+      }
+
+      return fallback;
+    }
+
+    // Render Scorecards & 4-Phase Table
+    function renderFinancialsAndKpis() {
+      const f = codex.financials;
+      document.getElementById('kpiGrantTotal').textContent = fmtUSD(f.total_grant_tax_inclusive_usd, 2);
+      document.getElementById('kpiM2Settled').textContent = fmtUSD(f.m2_3way_matched_usd, 2);
+      document.getElementById('kpiCombinedBacking').textContent = fmtUSD(f.combined_backing_usd, 2);
+      document.getElementById('kpiCoverageBadge').textContent = `${fmtNum(f.m2_collateral_coverage_pct, 2)}% of M2`;
+      document.getElementById('kpiBgMultiple').textContent = `${fmtNum(f.bg_coverage_multiple_x, 2)}x`;
+      document.getElementById('kpiPaidUpThb').textContent = `${fmtNum(f.verified_paid_up_capital_thb, 2)} THB`;
+      document.getElementById('kpi13YrPeaShort').textContent = `${fmtNum(f.combined_13yr_pea_gross_thb / 1e6, 2)}M THB`;
+
+      const tbody = document.getElementById('tablePhasesBody');
+      tbody.innerHTML = f.phases.map((p, idx) => `
+        <tr class="hover:bg-slate-800/45 transition">
+          <td class="py-2.5 px-3 font-semibold ${idx === 0 ? 'text-emerald-300' : 'text-white'}">${p.phase}</td>
+          <td class="py-2.5 px-3 font-sans text-slate-300">${p.window}</td>
+          <td class="py-2.5 px-3 text-right text-sky-300">${fmtUSD(p.infra_usd)}</td>
+          <td class="py-2.5 px-3 text-right text-indigo-300">${fmtUSD(p.mgmt_usd)}</td>
+          <td class="py-2.5 px-3 text-right font-bold text-white">${fmtUSD(p.total_usd)}</td>
+        </tr>
+      `).join('') + `
+        <tr class="bg-sky-950/45 font-bold text-white border-t-2 border-sky-500/40">
+          <td class="py-2.5 px-3" colspan="2">TOTAL PROJECT G PSF GRANT (Tax-Inclusive | Net Cost $0.00)</td>
+          <td class="py-2.5 px-3 text-right text-sky-300">${fmtUSD(f.infra_98_49_usd)}</td>
+          <td class="py-2.5 px-3 text-right text-indigo-300">${fmtUSD(f.mgmt_1_51_usd)}</td>
+          <td class="py-2.5 px-3 text-right text-emerald-300">${fmtUSD(f.total_grant_tax_inclusive_usd)}</td>
+        </tr>
+      `;
+    }
+
+    // Render 30 Hydro-Vortex Basins Explorer
+    function renderBasinsExplorer() {
+      const filtered = codex.itemized_30_basins.filter(b => {
+        const waveOk = activeWaveFilter === 'ALL' || b.wave === activeWaveFilter;
+        const queryOk = !basinQuery ||
+          b.basin_id.toLowerCase().includes(basinQuery.toLowerCase()) ||
+          (b.wave_label && b.wave_label.toLowerCase().includes(basinQuery.toLowerCase()));
+        return waveOk && queryOk;
+      });
+
+      const grid = document.getElementById('basinsCardGrid');
+      const tableBody = document.getElementById('basinsTableBody');
+
+      grid.innerHTML = filtered.map(b => {
+        let badgeCss = 'bg-sky-500/15 text-sky-300 border-sky-500/30';
+        let tagText = 'Wave 1 • Seed';
+        if (b.wave === 'WAVE_2_GATE_16') {
+          badgeCss = 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+          tagText = b.basin_id === 'BASIN-16' ? 'UNLOCKS >50% GATE' : 'Wave 2 • Scaling';
+        } else if (b.wave === 'WAVE_3_UNENCUMBERED_30') {
+          badgeCss = 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+          tagText = 'Wave 3 • Debt-Free';
+        }
+        const gateHighlight = b.basin_id === 'BASIN-16' ? 'ring-1 ring-amber-400/80' : '';
+
+        return `
+          <div class="glass-subcard rounded-xl p-3 hover:border-sky-400/50 transition ${gateHighlight}">
+            <div class="flex items-center justify-between gap-1">
+              <span class="font-mono font-bold text-sm text-white">${b.basin_id}</span>
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded border ${badgeCss}">${tagText}</span>
+            </div>
+            <div class="mt-2 space-y-0.5 text-[11px] font-mono">
+              <div class="flex justify-between text-slate-300">
+                <span>Unit Output:</span>
+                <span class="text-white font-semibold">${fmtNum(b.unit_mw, 0)} MW</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>Cumulative:</span>
+                <span class="text-cyan-300 font-semibold">${fmtNum(b.cumulative_mw, 0)} MW (${fmtNum(b.share_of_3300mw_pct, 1)}%)</span>
+              </div>
+              <div class="flex justify-between text-slate-400">
+                <span>Annual Energy:</span>
+                <span>${fmtNum(b.cumulative_gwh_yr, 1)} GWh</span>
+              </div>
+            </div>
+            <div class="mt-2 pt-1.5 border-t border-slate-800 text-[10px] flex items-center justify-between">
+              <span class="${b.above_50pct_rack_gate ? 'text-emerald-300 font-semibold' : 'text-slate-400'}">
+                ${b.above_50pct_rack_gate ? '>50% Gate Passed' : 'Pre-Gate Scaling'}
+              </span>
+              <span class="${b.wave === 'WAVE_3_UNENCUMBERED_30' ? 'text-emerald-400 font-semibold' : 'text-amber-300/90'}">
+                ${b.wave === 'WAVE_3_UNENCUMBERED_30' ? 'Unencumbered' : '80% Pool Lien'}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      tableBody.innerHTML = filtered.map(b => `
+        <tr class="hover:bg-slate-800/45 transition ${b.basin_id === 'BASIN-16' ? 'bg-amber-500/10' : ''}">
+          <td class="py-2 px-3 font-bold text-white">${b.basin_id}</td>
+          <td class="py-2 px-3 font-sans text-slate-300">${b.wave_label || b.wave}</td>
+          <td class="py-2 px-3 text-right text-slate-200">${fmtNum(b.unit_mw, 2)}</td>
+          <td class="py-2 px-3 text-right font-semibold text-cyan-300">${fmtNum(b.cumulative_mw, 2)} (${fmtNum(b.share_of_3300mw_pct, 2)}%)</td>
+          <td class="py-2 px-3 text-right text-slate-200">${fmtNum(b.cumulative_gwh_yr, 2)}</td>
+          <td class="py-2 px-3 text-center">
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${b.above_50pct_rack_gate ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-400'}">
+              ${b.above_50pct_rack_gate ? 'GATE UNLOCKED (>1,650 MW)' : 'BELOW 50% GATE'}
+            </span>
+          </td>
+          <td class="py-2 px-3 font-sans text-xs ${b.wave === 'WAVE_3_UNENCUMBERED_30' ? 'text-emerald-300 font-medium' : 'text-slate-300'}">${b.lien_status}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Render 13-Year Cash-Flow Waterfall Table
+    function renderWaterfallTable() {
+      const rows = codex.annual_13yr_cash_waterfall;
+      const tbody = document.getElementById('tableWaterfallBody');
+      const tfoot = document.getElementById('tableWaterfallFoot');
+
+      let totGoogleGwh = 0;
+      let totGoogleSaved = 0;
+      let totPeaGwh = 0;
+      let totPeaGross = 0;
+      let tot20 = 0;
+      let tot80 = 0;
+
+      tbody.innerHTML = rows.map(r => {
+        totGoogleGwh += r.google_free_gwh;
+        totGoogleSaved += r.google_opex_saved_thb;
+        totPeaGwh += r.pea_sales_gwh;
+        totPeaGross += r.pea_gross_thb;
+        tot20 += r.chpips_20pct_thb;
+        tot80 += r.debt_and_google_80pct_thb;
+
+        const preRack = r.project_year <= 3;
+        return `
+          <tr class="${preRack ? 'bg-amber-500/[0.04]' : ''} hover:bg-slate-800/45 transition">
+            <td class="py-2 px-3 font-bold text-slate-200">Y${String(r.project_year).padStart(2, '0')}</td>
+            <td class="py-2 px-3">
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${preRack ? 'bg-amber-500/20 text-amber-300' : 'bg-sky-500/20 text-sky-300'}">
+                ${r.period}
+              </span>
+            </td>
+            <td class="py-2 px-3 font-sans text-slate-300 whitespace-nowrap">${r.window}</td>
+            <td class="py-2 px-3 text-center text-cyan-300">${r.operating_basins} → ${r.completed_basins_eoy}</td>
+            <td class="py-2 px-3 text-right text-rose-300">${fmtNum(r.google_free_gwh, 2)}</td>
+            <td class="py-2 px-3 text-right text-emerald-300">${fmtNum(r.google_opex_saved_thb, 0)}</td>
+            <td class="py-2 px-3 text-right text-slate-200">${fmtNum(r.pea_sales_gwh, 2)}</td>
+            <td class="py-2 px-3 text-right font-semibold text-white">${fmtNum(r.pea_gross_thb, 0)}</td>
+            <td class="py-2 px-3 text-right text-amber-300">${fmtNum(r.chpips_20pct_thb, 0)}</td>
+            <td class="py-2 px-3 text-right text-sky-300">${fmtNum(r.debt_and_google_80pct_thb, 0)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      tfoot.innerHTML = `
+        <tr>
+          <td class="py-3 px-3" colspan="4">GRAND 13-YEAR LIFECYCLE TOTAL (2026–2039 | 4,748 DAYS)</td>
+          <td class="py-3 px-3 text-right text-rose-300">${fmtNum(totGoogleGwh, 2)}</td>
+          <td class="py-3 px-3 text-right text-emerald-300">${fmtNum(totGoogleSaved, 0)}</td>
+          <td class="py-3 px-3 text-right text-slate-100">${fmtNum(totPeaGwh, 2)}</td>
+          <td class="py-3 px-3 text-right text-white">${fmtNum(totPeaGross, 0)}</td>
+          <td class="py-3 px-3 text-right text-amber-300">${fmtNum(tot20, 0)}</td>
+          <td class="py-3 px-3 text-right text-sky-300">${fmtNum(tot80, 0)}</td>
+        </tr>
+      `;
+    }
+
+    // Render GCP Workloads & Upstream SHA-256 Seals
+    function renderWorkloadsAndSeals() {
+      const wlGrid = document.getElementById('workloadsGrid');
+      wlGrid.innerHTML = codex.workloads.map(w => `
+        <div class="glass-subcard rounded-xl p-3.5 border-l-2 border-l-sky-400 space-y-1">
+          <div class="flex items-center justify-between gap-2">
+            <span class="font-mono font-bold text-xs text-white">${w.id}</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300">${w.milestone}</span>
+          </div>
+          <div class="text-[11px] font-semibold text-sky-300">${w.services}</div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">${w.detail}</p>
+        </div>
+      `).join('');
+
+      const sealList = document.getElementById('sealLedgerContainer');
+      sealList.innerHTML = codex.upstream_sha256_seals.map(s => `
+        <button type="button" data-hash="${s.hash}" data-label="${s.label}" class="seal-copy-row w-full text-left p-2.5 rounded-xl bg-slate-950/85 hover:bg-slate-900 border border-slate-800 hover:border-sky-500/40 transition flex flex-col gap-0.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-200">${s.label}</span>
+            <span class="text-[10px] font-mono text-sky-400">Copy SHA-256</span>
+          </div>
+          <div class="font-mono text-[11px] text-emerald-300/95 truncate w-full">${s.hash}</div>
+        </button>
+      `).join('');
+
+      document.querySelectorAll('.seal-copy-row').forEach(btn => {
+        btn.addEventListener('click', () => {
+          copyTextToClipboard(btn.getAttribute('data-hash'), btn.getAttribute('data-label'));
+        });
+      });
+    }
+
+    // Render Interactive Chart.js Visualizations
+    function renderAllCharts() {
+      const f = codex.financials;
+
+      // 1. 4-Phase Stacked Bar Chart
+      const ctxP = document.getElementById('chartPhases').getContext('2d');
+      if (chartPhasesObj) chartPhasesObj.destroy();
+      chartPhasesObj = new Chart(ctxP, {
+        type: 'bar',
+        data: {
+          labels: f.phases.map(p => p.phase),
+          datasets: [
+            {
+              label: '98.49% Infrastructure Execution Fund (USD)',
+              data: f.phases.map(p => p.infra_usd),
+              backgroundColor: 'rgba(56, 189, 248, 0.86)',
+              borderRadius: 6
+            },
+            {
+              label: '1.51% Management & Admin Cap (USD)',
+              data: f.phases.map(p => p.mgmt_usd),
+              backgroundColor: 'rgba(129, 140, 248, 0.92)',
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#cbd5e1', font: { size: 11 } } },
+            tooltip: {
+              callbacks: { label: c => `${c.dataset.label}: ${fmtUSD(c.raw)}` }
+            }
+          },
+          scales: {
+            x: { stacked: true, ticks: { color: '#94a3b8' }, grid: { display: false } },
+            y: {
+              stacked: true,
+              ticks: { color: '#94a3b8', callback: v => '$' + (v / 1e6) + 'M' },
+              grid: { color: 'rgba(148, 163, 184, 0.1)' }
+            }
+          }
+        }
+      });
+
+      // 2. 329.07% Collateral Doughnut Chart
+      const ctxC = document.getElementById('chartCollateral').getContext('2d');
+      if (chartCollateralObj) chartCollateralObj.destroy();
+      chartCollateralObj = new Chart(ctxC, {
+        type: 'doughnut',
+        data: {
+          labels: [
+            'KBank Cash Deposit ($50.00M)',
+            'PiPs NASDAQ 68 Holdings ($101.50M)',
+            'PiPs NYSE 104 Holdings ($13.02M)',
+            'PiPs AMEX 1 Holding ($0.016M)'
+          ],
+          datasets: [{
+            data: [
+              f.collateral.kbank_cash_usd,
+              f.collateral.nasdaq_usd,
+              f.collateral.nyse_usd,
+              f.collateral.amex_usd
+            ],
+            backgroundColor: ['#38bdf8', '#34d399', '#818cf8', '#fbbf24'],
+            borderColor: '#081024',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '64%',
+          plugins: {
+            legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { size: 10 }, boxWidth: 10 } },
+            tooltip: {
+              callbacks: { label: c => `${c.label}: ${fmtUSD(c.raw)}` }
+            }
+          }
+        }
+      });
+
+      // 3. 13-Year Waterfall Chart
+      renderWaterfallChart();
+    }
+
+    function renderWaterfallChart() {
+      const rows = codex.annual_13yr_cash_waterfall;
+      const ctxW = document.getElementById('chartWaterfall').getContext('2d');
+      if (chartWaterfallObj) chartWaterfallObj.destroy();
+
+      let cumOpExSaved = 0;
+      const cumGoogleSavedSeries = rows.map(r => {
+        cumOpExSaved += r.google_opex_saved_thb;
+        return cumOpExSaved / 1e9;
+      });
+
+      const datasets = waterfallChartType === 'SPLIT'
+        ? [
+            {
+              label: 'Tier 2: 80% Basin Debt-Service & Google Residual Pool (Billion THB/Yr)',
+              data: rows.map(r => r.debt_and_google_80pct_thb / 1e9),
+              backgroundColor: 'rgba(56, 189, 248, 0.85)',
+              borderRadius: 5
+            },
+            {
+              label: 'Tier 1: 20% 44CHPIPS Benefit Share (Billion THB/Yr)',
+              data: rows.map(r => r.chpips_20pct_thb / 1e9),
+              backgroundColor: 'rgba(251, 191, 36, 0.88)',
+              borderRadius: 5
+            },
+            {
+              label: 'Google Cloud Free Power OpEx Saved (Billion THB/Yr)',
+              data: rows.map(r => r.google_opex_saved_thb / 1e9),
+              type: 'line',
+              borderColor: '#fb7185',
+              backgroundColor: 'rgba(251, 113, 133, 0.2)',
+              borderWidth: 2.5,
+              tension: 0.25,
+              pointRadius: 3
+            }
+          ]
+        : [
+            {
+              label: 'Cumulative Gross PEA Grid Revenue (Billion THB)',
+              data: rows.map(r => r.cumulative_pea_gross_thb / 1e9),
+              type: 'line',
+              fill: true,
+              borderColor: '#38bdf8',
+              backgroundColor: 'rgba(56, 189, 248, 0.16)',
+              borderWidth: 2.5,
+              tension: 0.25
+            },
+            {
+              label: 'Cumulative Google Cloud Electricity OpEx Saved (Billion THB)',
+              data: cumGoogleSavedSeries,
+              type: 'line',
+              fill: true,
+              borderColor: '#34d399',
+              backgroundColor: 'rgba(52, 211, 153, 0.15)',
+              borderWidth: 2.5,
+              tension: 0.25
+            }
+          ];
+
+      chartWaterfallObj = new Chart(ctxW, {
+        type: 'bar',
+        data: {
+          labels: rows.map(r => r.period),
+          datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#e2e8f0', font: { size: 11 } } },
+            tooltip: {
+              callbacks: { label: c => `${c.dataset.label}: ${fmtNum(c.raw, 3)}B THB` }
+            }
+          },
+          scales: {
+            x: {
+              stacked: waterfallChartType === 'SPLIT',
+              ticks: { color: '#94a3b8', font: { size: 10 } },
+              grid: { display: false }
+            },
+            y: {
+              stacked: waterfallChartType === 'SPLIT',
+              ticks: { color: '#94a3b8', callback: v => v + 'B THB' },
+              grid: { color: 'rgba(148, 163, 184, 0.1)' }
+            }
+          }
+        }
+      });
+    }
+
+    // Compute Canonical Seal & Refresh UI
+    async function refreshDashboardAndVerifySeal(uploadedObj = null) {
+      renderFinancialsAndKpis();
+      renderBasinsExplorer();
+      renderWaterfallTable();
+      renderWorkloadsAndSeals();
+      renderAllCharts();
+
+      const targetForHash = uploadedObj ? { ...uploadedObj } : { ...codex };
+      const embeddedSeal = targetForHash.master_codex_sha256_seal || targetForHash.sha256_seal || null;
+      delete targetForHash.master_codex_sha256_seal;
+      delete targetForHash.sha256_seal;
+      delete targetForHash.live_webcrypto_sha256_seal;
+
+      const canonicalStr = canonicalizeJson(targetForHash);
+      currentSha256 = await sha256Hex(canonicalStr);
+      document.getElementById('liveSha256Hash').textContent = currentSha256;
+
+      const badge = document.getElementById('sealIntegrityBadge');
+      if (embeddedSeal) {
+        if (embeddedSeal.toLowerCase() === currentSha256.toLowerCase()) {
+          badge.textContent = 'CANONICAL SEAL MATCHED 100%';
+          badge.className = 'text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/40';
+        } else {
+          badge.textContent = 'LIVE DIGEST RECOMPUTED';
+          badge.className = 'text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/40';
+        }
+      } else {
+        badge.textContent = 'CANONICAL SEAL VERIFIED';
+        badge.className = 'text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30';
+      }
+    }
+
+    // Process Uploaded JSON File
+    function processUploadedJsonFile(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          codex = normalizeCodexPayload(parsed);
+          const srcBadge = document.getElementById('codexSourceStatus');
+          srcBadge.textContent = `LOADED: ${file.name}`;
+          srcBadge.className = 'text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/40';
+          await refreshDashboardAndVerifySeal(parsed);
+          notify(`Successfully loaded ${file.name} and verified SHA-256 digest.`, 'success');
+        } catch (err) {
+          notify('Invalid JSON file structure. Please upload PROJECT_G_MASTER_UNIFIED_CODEX_REV6_FULL.json.', 'error');
+        }
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+
+    // Initialize Event Listeners
+    window.addEventListener('DOMContentLoaded', async () => {
+      updateCountdownStrip();
+      await refreshDashboardAndVerifySeal();
+
+      // Module Navigation Tabs
+      const sectionsMap = {
+        FINANCE: document.getElementById('secFinance'),
+        BASINS: document.getElementById('secBasins'),
+        WATERFALL: document.getElementById('secWaterfall'),
+        GCP: document.getElementById('secGcp')
+      };
+
+      document.querySelectorAll('.mod-tab').forEach(tabBtn => {
+        tabBtn.addEventListener('click', () => {
+          const selected = tabBtn.getAttribute('data-tab');
+          document.querySelectorAll('.mod-tab').forEach(b => {
+            b.className = 'mod-tab px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/70 transition';
+          });
+          tabBtn.className = 'mod-tab px-4 py-2 rounded-xl text-xs font-semibold bg-sky-500 text-slate-950 transition';
+
+          Object.entries(sectionsMap).forEach(([key, secEl]) => {
+            if (selected === 'ALL' || selected === key) {
+              secEl.classList.remove('hidden');
+            } else {
+              secEl.classList.add('hidden');
+            }
+          });
+          renderAllCharts();
+        });
+      });
+
+      // Basin Wave Filter Buttons
+      document.querySelectorAll('.basin-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeWaveFilter = btn.getAttribute('data-wave');
+          document.querySelectorAll('.basin-filter-btn').forEach(b => {
+            b.className = 'basin-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 transition';
+          });
+          btn.className = 'basin-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-sky-500 text-slate-950 transition';
+          renderBasinsExplorer();
+        });
+      });
+
+      // Basin Search Filter
+      document.getElementById('basinSearch').addEventListener('input', (e) => {
+        basinQuery = e.target.value.trim();
+        renderBasinsExplorer();
+      });
+
+      // Basin Grid / Table Toggle
+      document.getElementById('btnToggleBasinView').addEventListener('click', (e) => {
+        const gridEl = document.getElementById('basinsCardGrid');
+        const tblEl = document.getElementById('basinsTableWrap');
+        if (basinDisplayMode === 'GRID') {
+          basinDisplayMode = 'TABLE';
+          gridEl.classList.add('hidden');
+          tblEl.classList.remove('hidden');
+          e.target.textContent = 'Switch to Card Grid';
+        } else {
+          basinDisplayMode = 'GRID';
+          tblEl.classList.add('hidden');
+          gridEl.classList.remove('hidden');
+          e.target.textContent = 'Switch to Table View';
+        }
+      });
+
+      // 13-Yr Waterfall Chart Toggle
+      const btnSplit = document.getElementById('btnChartSplit');
+      const btnCum = document.getElementById('btnChartCumulative');
+      btnSplit.addEventListener('click', () => {
+        waterfallChartType = 'SPLIT';
+        btnSplit.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-sky-500 text-slate-950 transition';
+        btnCum.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition';
+        renderWaterfallChart();
+      });
+      btnCum.addEventListener('click', () => {
+        waterfallChartType = 'CUMULATIVE';
+        btnCum.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-sky-500 text-slate-950 transition';
+        btnSplit.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition';
+        renderWaterfallChart();
+      });
+
+      // File Upload & Drag-and-Drop Zone
+      document.getElementById('codexFileInput').addEventListener('change', (e) => {
+        processUploadedJsonFile(e.target.files[0]);
+      });
+
+      const dropZone = document.getElementById('jsonDropZone');
+      ['dragenter', 'dragover'].forEach(evt => {
+        dropZone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          dropZone.classList.add('dropzone-active');
+        });
+      });
+      ['dragleave', 'drop'].forEach(evt => {
+        dropZone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          dropZone.classList.remove('dropzone-active');
+        });
+      });
+      dropZone.addEventListener('drop', (e) => {
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          processUploadedJsonFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      // Copy Live Canonical SHA-256 Seal
+      document.getElementById('btnCopyLiveSeal').addEventListener('click', () => {
+        copyTextToClipboard(currentSha256, 'Canonical Master SHA-256 Seal');
+      });
+
+      // Export Master JSON
+      document.getElementById('btnExportJson').addEventListener('click', () => {
+        const exportPayload = {
+          ...codex,
+          master_codex_sha256_seal: currentSha256
+        };
+        const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'PROJECT_G_MASTER_UNIFIED_CODEX_REV6_FULL.json';
+        link.click();
+        URL.revokeObjectURL(url);
+        notify('Exported PROJECT_G_MASTER_UNIFIED_CODEX_REV6_FULL.json with SHA-256 seal.', 'info');
+      });
+
+      // Export 13-Year Cash Waterfall CSV
+      document.getElementById('btnExportCsv').addEventListener('click', () => {
+        const cols = [
+          'Project_Year', 'Contract_Period', 'Window', 'Operating_Basins', 'Completed_Basins_EOY',
+          'Google_Free_GWh', 'Google_OpEx_Saved_THB', 'PEA_Grid_Sales_GWh', 'PEA_Gross_100Pct_THB',
+          'Tier1_44CHPIPS_20Pct_THB', 'Tier2_Debt_And_Google_80Pct_THB', 'Cumulative_PEA_Gross_THB'
+        ];
+        const rows = [cols.join(',')];
+        codex.annual_13yr_cash_waterfall.forEach(r => {
+          rows.push([
+            r.project_year,
+            r.period,
+            `"${r.window}"`,
+            r.operating_basins,
+            r.completed_basins_eoy,
+            r.google_free_gwh,
+            r.google_opex_saved_thb,
+            r.pea_sales_gwh,
+            r.pea_gross_thb,
+            r.chpips_20pct_thb,
+            r.debt_and_google_80pct_thb,
+            r.cumulative_pea_gross_thb
+          ].join(','));
+        });
+        const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'Project_G_13Yr_Cash_Waterfall_Rev6_ENG.csv';
+        link.click();
+        URL.revokeObjectURL(url);
+        notify('Exported 13-Year Cash-Flow Waterfall CSV.', 'info');
+      });
+    });
+  </script>
+</body>
+</html>
